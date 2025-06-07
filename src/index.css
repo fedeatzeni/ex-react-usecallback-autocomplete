@@ -1,0 +1,10 @@
+input {
+  display: block;
+  width: 250px;
+}
+
+.results {
+  display: inline-block;
+  max-height: 300px;
+  overflow: auto;
+}
