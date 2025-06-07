@@ -1,4 +1,14 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
+
+function debounce(callback, delay) {
+	let timer;
+	return (value) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			callback(value);
+		}, delay);
+	};
+}
 
 function App() {
 
@@ -8,20 +18,23 @@ function App() {
 	const [products, setProducts] = useState([])
 	// console.log(query);
 
-	async function fetchData() {
-		const res = await fetch(`${url}/products?search=${query}`)
-		const data = await res.json()
-		setProducts(data)
-	}
-
-	useEffect(() => {
+	async function fetchData(query) {
 		// se query è una stringa vuota non effettua la chiamata
 		if (query.trim() === "") {
 			setProducts([])
 			return
 		}
 
-		fetchData()
+		const res = await fetch(`${url}/products?search=${query}`)
+		const data = await res.json()
+		setProducts(data)
+	}
+
+	const debouncedFetch = useCallback(debounce(query => fetchData(query), 1000), []);
+
+	useEffect(() => {
+		// fetchData()
+		debouncedFetch(query)
 	}, [query])
 	console.log(products);
 
