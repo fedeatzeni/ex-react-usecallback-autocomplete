@@ -8,3 +8,7 @@ input {
   max-height: 300px;
   overflow: auto;
 }
+
+image {
+  max-width: 200px;
+}
